@@ -43,7 +43,7 @@ function App() {
 
   return (
     <div>
-      <h1>Spare Project Inventory</h1>
+      <h1>Seya Spare Project Inventory</h1>
 
       {/* FORM */}
       <input
