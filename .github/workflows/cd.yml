@@ -2,7 +2,7 @@ name: CD Pipeline
 
 on:
   workflow_run:
-    workflows: ["CI Pipeline"]
+    workflows: ["CI Pipeline"]   # must match your CI workflow name exactly
     types:
       - completed
 
@@ -12,15 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Docker Buildx
+      # 2. Debug (temporary - helps verify structure)
+      - name: Debug structure
+        run: ls -R
+
+      # 3. Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 3. Login to Docker Hub
+      # 4. Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -36,7 +40,7 @@ jobs:
           context: ./client
           file: ./client/Dockerfile
           push: true
-          tags: seidgh/spare-frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/spare-frontend:latest
 
       # -------------------------
       # BACKEND IMAGE
@@ -47,4 +51,4 @@ jobs:
           context: ./server
           file: ./server/Dockerfile
           push: true
-          tags: seidgh/spare-backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/spare-backend:latest
