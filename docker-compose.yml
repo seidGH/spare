@@ -10,7 +10,7 @@ services:
   server:
     build: ./server
     ports:
-      - "5000:4000"
+      - "5000:9000"
     environment:
       - DB_HOST=db
 
