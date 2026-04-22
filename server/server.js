@@ -13,7 +13,7 @@ app.get("/api/message", (req, res) => {
   res.json({ message: "back end response👋" });
 });
 
-const PORT = 4000;
+const PORT = 9000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
