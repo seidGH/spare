@@ -2,7 +2,7 @@ name: CD Pipeline
 
 on:
   workflow_run:
-    workflows: ["CI Pipeline"]   # must match your CI workflow name exactly
+    workflows: ["CI Pipeline"]   # must match CI workflow name exactly
     types:
       - completed
 
@@ -16,15 +16,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Debug (temporary - helps verify structure)
-      - name: Debug structure
-        run: ls -R
-
-      # 3. Set up Docker Buildx
+      # 2. Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 4. Login to Docker Hub
+      # 3. Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -52,3 +48,32 @@ jobs:
           file: ./server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/spare-backend:latest
+
+  deploy-to-ec2:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. SSH into EC2 and deploy
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+
+            echo "🔹 Logging into Docker Hub..."
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+            echo "🔹 Pulling latest images..."
+            docker pull ${{ secrets.DOCKER_USERNAME }}/spare-frontend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/spare-backend:latest
+
+            echo "🔹 Stopping old containers..."
+            docker-compose down || true
+
+            echo "🔹 Starting updated containers..."
+            docker-compose up -d --build
+
+            echo "✅ Deployment completed on EC2"
