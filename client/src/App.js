@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 function App() {
-  // 1. State to store products
+  // 1. State to store products.
   const [products, setProducts] = useState([]);
 
   // 2. State for form input (new product)
