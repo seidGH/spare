@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repository
+      # 1. Checkout repository,
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -49,7 +49,7 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/spare-backend:latest
 
-deploy-to-ec2:
+  deploy-to-ec2:
     needs: build-and-push
     runs-on: ubuntu-latest
 
