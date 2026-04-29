@@ -1,4 +1,4 @@
-#server configeruation
+#server configeruations
 const express = require("express");
 const cors = require("cors");
 
