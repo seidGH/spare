@@ -23,7 +23,8 @@ FROM nginx:alpine
 # remove default nginx html
 RUN rm -rf /usr/share/nginx/html/*
 
-# copy build output
+# copy build output only , the final static html file only , throwing away the node modules and the entire node application
+#thats what make the image lighter and more portable as it drops modules and environments.
 COPY --from=builder /app/build /usr/share/nginx/html
 
 # expose port
