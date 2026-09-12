@@ -9,6 +9,10 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 
+app.get("/healthz", (req, res) => {
+  res.status(200).send("OK");
+});
+
 app.get("/api/message", (req, res) => {
   res.json({ message: "back end response👋" });
 });
